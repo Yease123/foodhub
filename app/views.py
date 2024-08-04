@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import signupasuser,sigupasresturant
+from .forms import signupasuser,sigupasresturant,signupasdelivery
 
 # Create your views here.
 def home(request):
@@ -53,8 +53,26 @@ def signup_user(request):
 
                     return redirect("login")
                 else:
-                    print(form.errors)
+                   
                     return render(request, "signup.html", {'form': form})
+            elif identify=="delivery":
+                form=signupasdelivery(request.POST,request.FILES)
+                if form.is_valid():
+                    username=form.cleaned_data["username"]
+                    email=form.cleaned_data["email"]
+                    password=form.cleaned_data["password"]
+                    address=form.cleaned_data["address"]
+                    phone=form.cleaned_data["phone"]
+                    photo=form.cleaned_data["photo"]
+                    user=User.objects.create(username=username,email=email,address=address,phonenumber=phone,photo=photo,isdelivery=True)
+                    user.set_password(password)
+                    user.save()
+                    return redirect("login")
+                else:
+                    return render(request,"signup.html",{'form':form})
+
+
+
                     
     else:
       form=signupasuser()
