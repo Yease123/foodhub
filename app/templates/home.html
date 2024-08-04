@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}
+FoodHub-Home
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css\home.css' %}">
+{% endblock %}
+{% block content %}
+<div id="left">
+  {% include "categories.html" %}
+</div>
+<div id="right">
+{% include "items.html" %}
+</div>
+{% endblock %}

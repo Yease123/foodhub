@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}
+FoodHub-Signup
+{% endblock %}
+{% block css %}
+{% endblock %}
+{% block content %}
+ <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <button type="button" id="user" class="btn btn-primary mb-3">Signup as User</button>
+                        <button type="button" id="hotel" class="btn btn-primary mb-3">Signup as Restaurant</button>
+                        <button type="button" id="delivery" class="btn btn-primary mb-3">Signup as DeliveryMan</button>
+                        <br>
+                       
+                        {% for field in form %}
+                        {% if field.errors %}
+                           {% for error in field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                           {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                       
+                        <div id="loginasuser" style="display: block;">
+                           {% include "signupasuser.html" with form=form %}
+                        </div>
+                        <div id="loginasresturant" style="display:none;">
+                          {% include "signupasresturant.html" with form=form %}
+                        </div>
+                        <div id="loginasdelivery" style="display:none;">
+                            {% include "signupasdelivery.html" with form=form %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+    // JavaScript code to handle the form display based on localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+        const formToDisplay = localStorage.getItem("formtodisplay");
+        if (formToDisplay) {
+            document.getElementById("loginasuser").style.display = formToDisplay === "loginasuser" ? "block" : "none";
+            document.getElementById("loginasresturant").style.display = formToDisplay === "loginasresturant" ? "block" : "none";
+            document.getElementById("loginasdelivery").style.display = formToDisplay === "loginasdelivery" ? "block" : "none";
+        }
+    });
+
+    document.getElementById('hotel').addEventListener('click', function() {
+        document.getElementById("loginasuser").style.display = "none";
+        document.getElementById("loginasresturant").style.display = "block";
+        document.getElementById("loginasdelivery").style.display = "none";
+        localStorage.setItem('formtodisplay', "loginasresturant");
+    });
+
+    document.getElementById('user').addEventListener('click', function() {
+        document.getElementById("loginasuser").style.display = "block";
+        document.getElementById("loginasresturant").style.display = "none";
+        document.getElementById("loginasdelivery").style.display = "none";
+        localStorage.setItem('formtodisplay', "loginasuser");
+    });
+
+    document.getElementById('delivery').addEventListener('click', function() {
+        document.getElementById("loginasuser").style.display = "none";
+        document.getElementById("loginasresturant").style.display = "none";
+        document.getElementById("loginasdelivery").style.display = "block";
+        localStorage.setItem('formtodisplay', "loginasdelivery");
+    });
+</script>
+{% endblock %}

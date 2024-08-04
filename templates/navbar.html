@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top" data-bs-theme="dark" >
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{%url 'home' %}">FoodHub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{%url 'home' %}">Home</a>
+                    </li>
+                   
+                </ul>
+                <div class="d-flex align-items-center ms-auto">
+                    <button  class="fa-solid fa-cart-shopping fa-lg position-relative me-3" style="background:none;border:none">
+                       
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">
+                            0
+                          <span class="visually-hidden">unread messages</span>
+                        </span>
+                      </button>
+                    <button id="mode" class="fa-solid fa-sun fa-lg me-2" style="border:none; background: none; " onclick={change()}></button>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Food or Resturant" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <a href="{% url 'login' %}"><button class="btn btn-outline-success ms-3" type="submit">Login/Signup</button></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    
+</body>
+<script>
+    var htmlTag = document.documentElement; 
+            var modeButton = document.getElementById('mode');
+    if(localStorage.getItem('theme')=='light')
+        {
+            htmlTag.removeAttribute('data-bs-theme'); 
+                modeButton.classList.remove('fa-sun');
+                modeButton.classList.add('fa-moon');
+                
+        }
+        else
+        {
+            htmlTag.setAttribute('data-bs-theme', 'dark'); 
+            modeButton.classList.remove('fa-moon');
+            modeButton.classList.add('fa-sun');
+            
+        }
+    function change()
+    {
+        
+        var htmlTag = document.documentElement; 
+            var modeButton = document.getElementById('mode');
+
+            if (htmlTag.hasAttribute('data-bs-theme') && htmlTag.getAttribute('data-bs-theme') === 'dark') {
+                htmlTag.removeAttribute('data-bs-theme'); 
+                modeButton.classList.remove('fa-sun');
+                modeButton.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlTag.setAttribute('data-bs-theme', 'dark'); 
+                modeButton.classList.remove('fa-moon');
+                modeButton.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+    }
+</script>
+</html>

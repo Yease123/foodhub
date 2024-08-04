@@ -1,0 +1,41 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <h5>Signup as Resturant</h5>
+        <hr>
+        <input type="hidden" value="resturant" name="identify">
+        <label  class="form-label">Hotel Username Name</label>
+        <input type="text" name="username" value="{{ form.username.value|default:'' }}" class="form-control">
+        <label for="exampleInputEmail1" class="form-label">Email</label>
+        <input type="text" name="email" class="form-control"  value="{{ form.email.value|default:'' }}" id="exampleInputEmail1"
+            aria-describedby="emailHelp">
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" value="{{ form.password.value|default:'' }}">
+            </div>
+
+        <label  class="form-label">Address</label>
+        <input type="text" name="address" class="form-control" value="{{ form.address.value|default:'' }}">
+        <label class="form-label">Logititude</label>
+        <input type="number" name="logititude" class="form-control" value="{{ form.logititude.value|default:'' }}">
+        <label  class="form-label">latitude</label>
+        <input type="text" name="latitude" class="form-control" value="{{ form.latitude.value|default:'' }}">
+        <label  class="form-label">Phone no</label>
+        <input type="number" name="phone" class="form-control" value="{{ form.phone.value|default:'' }}">
+       
+        <label  class="form-label">opening hour</label>
+        <input type="time" name="opening" class="form-control" value="{{ form.opening.value|default:'' }}">
+        <label  class="form-label">closing hour</label>
+        <input type="time" name="closing" class="form-control" value="{{ form.closing.value|default:'' }}">
+        
+        
+
+
+     
+    </div>
+   
+    <label  class="form-label">Owner citizenship picture or Hostel register paper</label>
+        <input type="file" name="photo" class="form-control mb-2"  >
+    <p>Already have a account?<a href="{% url 'login'%}">Login</a></p>
+    <button type="submit"  class="btn btn-primary">Submit</button>
+</form>
