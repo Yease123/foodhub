@@ -115,6 +115,30 @@ class signupasdelivery(forms.Form):
         if len(data)!=10:
             raise forms.ValidationError("phone must be of 10 digits")
         return data
+class loginvalidate(forms.Form):
+    username=forms.CharField(required=True,error_messages={"required":"Username or email is required"},widget=forms.TextInput(attrs={'class':'input'}))
+    password=forms.CharField(required=True,error_messages={"required":"Password is required"},widget=forms.PasswordInput(attrs={'class':'input'}))
+    def clean_username(self):
+        print("hiiii")
+        data=self.cleaned_data.get("username")
+        if '@gmail.com' in data:
+            user= User.objects.filter(email=data)
+            if user.exists():
+                data=user.first().username
+            else:
+                raise forms.ValidationError("Email or Password is wrong")
+        else:
+             if  not User.objects.filter(username=data).exists():
+                  raise forms.ValidationError("Email or Password is wrong")
+                 
+                   
+
+
+        return data
+           
+
+
+    
 
 
 

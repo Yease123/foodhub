@@ -11,22 +11,34 @@ FoodHub-Login
             <div class="card mt-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
-                   
-                        {% if messages %}
-                        <div class="alert alert-primary" role="alert">
+                   {% if request.GET.signup == 'success'%}
+                   <div class="alert alert-primary" role="alert">
+                    Signup sucessfully now login
+                   </div>
+                   {% endif %}
+                   {% for field in form %}
+                   {% if field.errors %}
+                      {% for error in field.errors %}
+                           <div class="alert alert-danger" role="alert">
+                               {{ error }}
+                           </div>
+                      {% endfor %}
+                   {% endif %}
+               {% endfor %}
+               <!--message-->
+               {% if messages %}
 
-                        {% for message in messages %}
-                        {{ message }}
-                        {% endfor %}
-                    </div>
-                        {% endif %}
-                   
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert"> {{ message }} </div>
+    {% endfor %}
+
+{% endif %}
                     <form method="POST">
                         {%csrf_token%}
                         <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Email or Username</label>
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1"
-                                aria-describedby="emailHelp">
+                            <label  class="form-label">Email or Username</label>
+                            <input type="text" name="username" class="form-control" 
+                                >
 
                         </div>
                         <div class="mb-3">

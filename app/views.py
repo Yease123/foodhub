@@ -1,16 +1,37 @@
 from django.shortcuts import render,redirect
+from django.urls import reverse
 
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import signupasuser,sigupasresturant,signupasdelivery
+from django.contrib.auth import login,logout,authenticate
+
+from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate
 
 # Create your views here.
 def home(request):
     return render(request,"home.html")
 
 def login_user(request):
-    
-    return render(request,"login.html")
+    if request.method=="POST":
+        form=loginvalidate(request.POST)
+        if form.is_valid():
+            username=form.cleaned_data["username"]
+            password=form.cleaned_data["password"]
+            user=authenticate(username=username,password=password)
+            if user:
+                login(request,user)
+                return redirect("home")
+            else:
+                messages.info(request,"invalid credentials")
+                return render( request,'login.html',{'form':form})
+                
+        else:
+            return render(request, "login.html", {'form': form})
+
+    else:
+         form=loginvalidate()
+        
+    return render(request,"login.html",{'from':form})
 def signup_user(request):
     if request.method=="POST":
             identify=request.POST.get("identify")
@@ -28,7 +49,9 @@ def signup_user(request):
                     user=User.objects.create(username=username,email=email,address=address,phonenumber=phone,isuser=True)
                     user.set_password(password)
                     user.save()
-                    return redirect("login")
+                    
+                    return redirect('login')
+
                 else:
                      return render(request, "signup.html", {'form': form})
             #validating resturant
@@ -67,6 +90,7 @@ def signup_user(request):
                     user=User.objects.create(username=username,email=email,address=address,phonenumber=phone,photo=photo,isdelivery=True)
                     user.set_password(password)
                     user.save()
+                    
                     return redirect("login")
                 else:
                     return render(request,"signup.html",{'form':form})
