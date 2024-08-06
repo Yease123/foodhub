@@ -1,7 +1,9 @@
 from django import forms
 
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 import re
+User=get_user_model()
 class signupasuser(forms.Form):  
     username=forms.CharField( max_length=20, required=True, error_messages={'required': 'Username is required'},widget=forms.EmailInput(attrs={'class':'input'}))
     email=forms.EmailField( max_length=20, required=True, error_messages={'required': 'Email is required'},widget=forms.TextInput(attrs={'class':'input'}))

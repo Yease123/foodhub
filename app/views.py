@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect
 from django.urls import reverse
 
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 
 from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate
-
+User=get_user_model()
 # Create your views here.
 def home(request):
     return render(request,"home.html")

@@ -20,6 +20,48 @@
                    
                 </ul>
                 <div class="d-flex align-items-center ms-auto">
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.approved == True and  request.user.isresturant == True  %}
+                    <a href=""><i class="fa-solid fa-hotel fa-lg me-3" style="color: #ffffff;"></i></a>
+                    {% endif %}
+                    {% if request.user.approved == True and  request.user.isdelivery == True  %}
+                    <a href=""><i class="fa-solid fa-truck fa-lg me-3" style="color: #ffffff;"></i></a>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if request.user.is_authenticated %}
+
+
+                    <div class="dropdown me-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user fa-lg"></i>
+                        </button>
+                        {% comment %} <i class="fa-solid fa-right-from-bracket"> {% endcomment %}
+                        <ul class="dropdown-menu">
+                          <li class="dropdown-item">Name:{{request.user.username}}</li>
+                          <li><a class="dropdown-item" href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                         
+                          
+                            {% if request.user.isresturant == True or request.user.isdelivery == True  %}
+                            {% if request.user.approved == True  %}
+                            <li class="dropdown-item" style='background-color:#198754'>
+                             Status:Approved   
+                            </li>
+                            {% else %}
+                            <li class="dropdown-item" style='background-color:#DC3545'>
+                              Status:Pending  
+                            </li>
+                            {% endif %}
+                            {% endif %}
+                            <li><a class="dropdown-item" href="#">Edit Credentials</a></li>
+                         
+                        </ul>
+                      </div>
+
+                   {% else %}
+
+                    <a href="{% url 'login' %}"><button class="btn btn-outline-success me-3" type="submit">Login/Signup</button></a>
+                    {% endif %}
                     <button  class="fa-solid fa-cart-shopping fa-lg position-relative me-3" style="background:none;border:none">
                        
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">
@@ -32,7 +74,7 @@
                         <input class="form-control me-2" type="search" placeholder="Food or Resturant" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
-                    <a href="{% url 'login' %}"><button class="btn btn-outline-success ms-3" type="submit">Login/Signup</button></a>
+                    
                 </div>
             </div>
         </div>
