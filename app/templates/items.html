@@ -1,16 +1,37 @@
-<div class="container">
-<div class="row">
-<div class="col-5">
+<div id="downdiv" class="mt-3">
+  <div class="container">
+      <div class="row">
+          {% for food in foodinfo %}
+          <div class="col-4 pt-4">
+              <div class="card" style="width: 18rem;">
+                  <img src="{{food.photo.url}}" class="card-img-top" alt="News image">
+                  <div class="card-body">
+                      <h5 class="card-title">{{food.foodname}}</h5>
+                      <p class="card-text">{{food.about}}</p>
+                      <p class="card-text">Available piece:{{food.stock_level}} </p>
+                    
+                      <p class="card-text">price per piece:Rs {{food.price}}</p>
+                     
+                      <p>
+                          {% if food.isveg == True %}
+                          <li class="fa-solid fa-circle fa-lg" style="color:#21c00c;"></li>
+                          {% else %}
+                          <i class="fa-solid fa-circle fa-lg" style="color: #c20a0a;"></i>
+                          {% endif %}
+                      </p>
+                      <div class="card-footer text-body-secondary mb-3">
+                          Listed by :{{food.resturant_name}}
+                          Address at:{{food.resturant_name.address}}
+                         </div>
+                      <a href="" class="btn btn-primary">Order Food</a> 
+                      <button class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button>
+                      
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
 
-    <div class="card mt-3 ms-3" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-          <button class="fa-regular fa-heart fa-lg ms-4" style="background:none;border:none"></button>
-        </div>
+
       </div>
-</div>
-</div>
+  </div>
 </div>

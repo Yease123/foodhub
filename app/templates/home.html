@@ -12,6 +12,6 @@ FoodHub-Home
   {% include "categories.html" %}
 </div>
 <div id="right">
-{% include "items.html" %}
+{% include "items.html" with foodinfo=foodinfo%}
 </div>
 {% endblock %}

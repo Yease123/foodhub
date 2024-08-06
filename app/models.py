@@ -25,9 +25,9 @@ class Food(models.Model):
     about=models.TextField()
     price=models.IntegerField()
     resturant_name=models.ForeignKey(customeuser,on_delete=models.CASCADE)
-    picture=models.ImageField(upload_to="images/")
+    
     category = models.CharField(max_length=50)
-    isveg=models.BooleanField() 
+    isveg=models.BooleanField(default=False) 
     available = models.BooleanField(default=True)
     promotion = models.CharField(max_length=100, blank=True, null=True)
     stock_level = models.PositiveIntegerField(default=0)

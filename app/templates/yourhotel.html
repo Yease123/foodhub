@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+FoodHub-YourResturant
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css\hotel.css' %}">
+{% endblock %}
+{% block content %}
+<div id="status" class="mt-2">
+
+    <form method="post">
+       {% csrf_token %}
+       <input type="hidden" name="hiddenfield" value="updatingstatus">
+        <div class="btn-group">
+            <button type="button" class="btn btn-{% if request.user.isopene == True %}success{% else %}danger{% endif %} dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+              Status:{% if request.user.isopene == True %}Open{% else %}Close{% endif %}
+            </button>
+            <ul class="dropdown-menu">
+                {% if request.user.isopene == True %}
+                <li class="dropdown-item" ><input class="btn btn-danger" type="Submit" name="submitstatus" value="close"></li>
+                {% else %}
+                <li class="dropdown-item" ><input class="btn btn-success" type="Submit" name="submitstatus" value="open"></li>
+                {% endif %}
+              
+     
+            </ul>
+          </div>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Add food</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="hiddenfield" value="insertingfood">
+                        <div class="mb-3">
+                          <label  class="form-label">Food Name</label>
+                          <input type="text" name="foodname" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label  class="form-label">Description</label>
+                            <input type="text" name="about" placeholder="write about topings if any and extra ingredient" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label  class="form-label">Price in Rs</label>
+                            <input type="number" name="price" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label  class="form-label">Tags</label>
+                            <input type="Text" name="category" placeholder="#burger,#fastfood" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label  class="form-label">No of Stock</label>
+                            <input type="number" name="stock" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label  class="form-label">Image of Food</label>
+                            <input type="file" name="photo" class="form-control">
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox"  name="switch" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label"  for="flexSwitchCheckDefault">Veg</label>
+                        </div>
+                       
+                    <div  class="card-title text-center" >
+                        <button type="submit" class="btn btn-primary mt-2" >Submit</button>
+                    </div>
+                       
+                      </form>
+                 
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="downdiv" class="mt-3">
+    <div class="container">
+        <div class="row">
+            {% for food in foodinfo %}
+            <div class="col-4 pt-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{food.photo.url}}" class="card-img-top" alt="News image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{food.foodname}}</h5>
+                        <p class="card-text">{{food.about}}</p>
+                        <p class="card-text">Available piece:{{food.stock_level}} </p>
+                      
+                        <p class="card-text">price per piece:{{food.price}}</p>
+                       
+                        <p>
+                            {% if food.isveg == True %}
+                            <li class="fa-solid fa-circle fa-lg" style="color:#21c00c;"></li>
+                            {% else %}
+                            <i class="fa-solid fa-circle fa-lg" style="color: #c20a0a;"></i>
+                            {% endif %}
+                        </p>
+                        <div class="card-footer text-body-secondary mb-3">
+                            Listed by :{{food.resturant_name}}
+                            Address at:{{food.resturant_name.address}}
+                           </div>
+                        <a href="" class="btn btn-primary">Edit food </a>
+                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}

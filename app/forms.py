@@ -17,6 +17,10 @@ class signupasuser(forms.Form):
             raise forms.ValidationError("username must be between 4 to 20 length")
         if User.objects.filter(username=data):
             raise forms.ValidationError("Username is already taken")
+        username_regex=r'^[a-zA-Z._-]{1,150}$'
+        if not re.match(username_regex,data):
+            raise forms.ValidationError("Username can only conatins .-_ symbol and Alphebet")
+
         return data
     def clean_email(self):
         data=self.cleaned_data.get("email")
@@ -46,8 +50,7 @@ class sigupasresturant(forms.Form):
     logititude=forms.CharField( required=True, error_messages={'required': 'logititude is required'},widget=forms.NumberInput(attrs={'class':'input'}))
     latitude=forms.CharField(  required=True, error_messages={'required': 'latitude is required'},widget=forms.NumberInput(attrs={'class':'input'}))
     phone=forms.CharField( max_length=10, required=True, error_messages={'required': 'Phone is required'},widget=forms.NumberInput(attrs={'class':'input'}))
-    opening=forms.CharField( required=True, error_messages={'required': 'Opening hour is required'},widget=forms.TimeInput(attrs={'class':'input'}))
-    closing=forms.CharField( required=True, error_messages={'required': 'Closing hour is required'},widget=forms.TimeInput(attrs={'class':'input'}))
+    
     password=forms.CharField(  required=True, error_messages={'required': 'Password  is required'},widget=forms.PasswordInput(attrs={'class':'input'}))
     photo=forms.ImageField(required=True, error_messages={'required': 'photo  is required'},widget=forms.FileInput(attrs={'class':'input'}))
     
@@ -57,6 +60,10 @@ class sigupasresturant(forms.Form):
             raise forms.ValidationError("Username length must be greater than 3")
         if User.objects.filter(username=data):
             raise forms.ValidationError("Username is already taken")
+        username_regex=r'^[a-zA-Z._-]{1,150}$'
+        if not re.match(username_regex,data):
+            raise forms.ValidationError("Username can only conatins .-_ symbol and Alphebet")
+
         return data
     def clean_email(self):
         data=self.cleaned_data.get("email")
@@ -95,6 +102,10 @@ class signupasdelivery(forms.Form):
             raise forms.ValidationError("Username length must be greater than 3")
         if User.objects.filter(username=data):
             raise forms.ValidationError("Username is already taken")
+        username_regex=r'^[a-zA-Z._-]{1,150}$'
+        if not re.match(username_regex,data):
+            raise forms.ValidationError("Username can only conatins .-_ symbol and Alphebet")
+
         return data
     def clean_password(self):
         data=self.cleaned_data.get("password")
@@ -137,7 +148,10 @@ class loginvalidate(forms.Form):
 
 
         return data
-           
+
+
+
+
 
 
     

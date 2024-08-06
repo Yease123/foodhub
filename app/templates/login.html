@@ -11,11 +11,7 @@ FoodHub-Login
             <div class="card mt-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
-                   {% if request.GET.signup == 'success'%}
-                   <div class="alert alert-primary" role="alert">
-                    Signup sucessfully now login
-                   </div>
-                   {% endif %}
+                   
                    {% for field in form %}
                    {% if field.errors %}
                       {% for error in field.errors %}
