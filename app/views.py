@@ -144,3 +144,9 @@ def youhotel(request):
     context={'foodinfo':foodinformation}
 
     return render(request,"yourhotel.html",context)
+@login_required
+def orderfood(request,pk):
+    fooddata=Food.objects.get(id=pk)
+    context={'foodinfo':fooddata}
+    return render(request,"orderfood.html",context)
+

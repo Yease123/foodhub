@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}
+FoodHub-OrderFood
+{% endblock %}
+{% block content %}
+<div style="text-align:center;float:left " class="ms-3 mt-3" >
+    <div class="card " style="width: 18rem;">
+        <img src="{{foodinfo.photo.url}}" class="card-img-top" alt="{{foodinfo.foodname}}">
+        <div class="card-body">
+            <h5 class="card-title">{{foodinfo.foodname}}</h5>
+            <p class="card-text">{{foodinfo.about}}</p>
+            <p class="card-text">Available piece:{{foodinfo.stock_level}} </p>
+          
+            <p class="card-text">price per piece:Rs {{foodinfo.price}}</p>
+           
+            <p>
+                {% if foodinfo.isveg == True %}
+                <li class="fa-solid fa-circle fa-lg" style="color:#21c00c;"></li>
+                {% else %}
+                <i class="fa-solid fa-circle fa-lg" style="color: #c20a0a;"></i>
+                {% endif %}
+            </p>
+            <div class="card-footer text-body-secondary mb-3">
+                Listed by :{{foodinfo.resturant_name}}
+                Address at:{{foodinfo.resturant_name.address}}
+               </div>
+           
+            <button class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button>
+            
+        </div>
+    </div>
+</div>
+  
+<div class="card mt-3" style="text-align:center;">
+    <h5 class="card-header">{{foodinfo.foodname}}</h5>
+    <div class="card-body">
+      <h5 class="card-title">{{foodinfo.about}}</h5>
+      <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Order Food</h3>
+                        <form method="post" id="orderform">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <input type="hidden" value="{{foodinfo.stock_level}}" id="stocklevel" readonly>
+                                <label  class="form-label">TO be Delived At:</label>
+                                <input type="Text"  value="{{request.user.address}}" class="form-control">
+                            </div>
+                            
+                            
+                           
+                            <div class="mb-3">
+                                <label  class="form-label">No of pieces</label>
+                                <input type="number" value="1" min='1'  id="piecesoforderfood" class="form-control">
+                                <p id="errormessage" style="color:red"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label  class="form-label">Price</label>
+                                <input type="number"   value={{foodinfo.price}}  id="priceoforderfood" disabled="true" class="form-control">
+                            </div>
+                            <input class="btn btn-primary"id="oderfoodsubmit" type="Submit"  value="Order Now!" >
+                            </form>
+                     
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  {% block script %}
+  <script>
+    
+    const piece = document.getElementById("piecesoforderfood");
+    const price = document.getElementById("priceoforderfood"); 
+    const stockLevelField =parseInt(document.getElementById("stocklevel").value);
+    
+    const exactprice = parseFloat(price.value); 
+    piece.addEventListener('input', function(event) {
+    
+
+        const piecesValue = parseInt(piece.value);
+        
+       
+        
+      
+      
+           
+            const totalPrice = piecesValue * exactprice;
+            
+           
+            price.value = totalPrice.toFixed(2); 
+    }); 
+    document.getElementById("orderform").addEventListener('submit', function(event)  {
+        const piecesValue = parseInt(piece.value);
+       
+        
+       
+        if (isNaN(piecesValue) || piecesValue < 1 || stockLevelField<piecesValue)
+         {
+            document.getElementById("errormessage").textContent="no fo item is greater than item at stock level"
+            event.preventDefault(); // Stop the form from submitting
+            
+        }
+    });
+   
+   
+
+  </script>
+  
+  {% endblock %}
+{% endblock %}

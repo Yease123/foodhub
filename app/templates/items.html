@@ -23,7 +23,7 @@
                           Listed by :{{food.resturant_name}}
                           Address at:{{food.resturant_name.address}}
                          </div>
-                      <a href="" class="btn btn-primary">Order Food</a> 
+                      <a href="{% url 'orderfood' pk=food.id %}" class="btn btn-primary">Order Food</a> 
                       <button class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button>
                       
                   </div>
