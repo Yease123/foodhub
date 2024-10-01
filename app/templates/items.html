@@ -24,8 +24,20 @@
                           Address at:{{food.resturant_name.address}}
                          </div>
                       <a href="{% url 'orderfood' pk=food.id %}" class="btn btn-primary">Order Food</a> 
-                      <button class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button>
+
                       
+                      {% if request.user.is_authenticated %}
+                    {%if food.id in cartinfo%}
+                      <button id="heartButton{{ forloop.counter }}" class="fa-solid fa-heart fa-lg" style="background:none;border:none;color:#de1717" onclick="cartclick(this,{{food.id}})"></button>
+                  
+                      {% else %}
+                      <button id="heartButton{{ forloop.counter }}" class="fa-regular fa-heart fa-lg" style="background:none;border:none" onclick="cartclick(this,{{food.id}})"></button>
+                      {% endif %}
+                   
+                     
+                     {% else %}
+                     <a href="{% url 'login' %}"> <button id='heartButton' class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button></a>
+                     {% endif %}
                   </div>
               </div>
           </div>
@@ -35,3 +47,32 @@
       </div>
   </div>
 </div>
+<script>
+    function cartclick(button,id) {
+    
+        
+        
+        let cartCount = parseInt(sessionStorage.getItem('cartCount')) || 0;
+  
+        if (button.classList.contains('fa-regular')) {
+            button.className = 'fa-solid fa-heart fa-lg';
+            button.style.color = '#de1717';
+          window.location.href = `/addcart/?foodid=${encodeURIComponent(id)}`;
+           
+        } else {
+            button.className = 'fa-regular fa-heart fa-lg';
+            button.style.color = ''; 
+            window.location.href = `/removecart/?foodid=${encodeURIComponent(id)}`;
+          
+           
+        }
+        
+       
+      
+    }
+   
+    
+   
+</script>
+
+  

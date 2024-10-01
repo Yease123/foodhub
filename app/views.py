@@ -1,18 +1,26 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Food
+from .models import Food,Usercart
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
+
 
 from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate
 User=get_user_model()
 # Create your views here.
 def home(request):
     foodinformation=Food.objects.all()
-    context={'foodinfo':foodinformation}
+    if request.user:
+      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True)
+      cart_length=cartinfo.count()
+    else:
+         cartinfo=Usercart.objects.all()
+
+
+    context={'foodinfo':foodinformation,'cartinfo':cartinfo,'cartlength':cart_length}
     return render(request,"home.html",context)
 
 def login_user(request):
@@ -150,3 +158,19 @@ def orderfood(request,pk):
     context={'foodinfo':fooddata}
     return render(request,"orderfood.html",context)
 
+def addCart(request):
+    userid=request.user
+    foodid=request.GET.get('foodid')
+    food = get_object_or_404(Food, id=foodid)
+    cart=Usercart.objects.create(userid=userid,foodid=food)
+    cart.save()
+   
+    return redirect('home')
+def removeCart(request):
+    userid=request.user
+    foodid=request.GET.get('foodid')
+    food = get_object_or_404(Food, id=foodid)
+    cart=Usercart.objects.filter(userid=userid,foodid=food)
+    cart.delete()
+   
+    return redirect('home')

@@ -36,7 +36,9 @@ class Food(models.Model):
     photo=models.ImageField(upload_to="food/images/",blank=True, null=True)
 
     
-
+class Usercart(models.Model):
+    userid=models.ForeignKey(customeuser,on_delete=models.CASCADE)
+    foodid=models.ForeignKey(Food,on_delete=models.CASCADE)
 
 
 

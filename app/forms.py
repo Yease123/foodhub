@@ -85,7 +85,11 @@ class sigupasresturant(forms.Form):
         data=self.cleaned_data.get("phone")
         if len(data)!=10:
             raise forms.ValidationError("phone must be of 10 digits")
+        if not data.startswith('98'):
+              raise forms.ValidationError("Phone must start with 98")
+        print(data)
         return data
+        
    
 class signupasdelivery(forms.Form):
     password=forms.CharField(max_length=20, required=True,error_messages={"required":"password is required"},widget=forms.PasswordInput(attrs={'class':'input'}))
@@ -132,7 +136,7 @@ class loginvalidate(forms.Form):
     username=forms.CharField(required=True,error_messages={"required":"Username or email is required"},widget=forms.TextInput(attrs={'class':'input'}))
     password=forms.CharField(required=True,error_messages={"required":"Password is required"},widget=forms.PasswordInput(attrs={'class':'input'}))
     def clean_username(self):
-        print("hiiii")
+        
         data=self.cleaned_data.get("username")
         if '@gmail.com' in data:
             user= User.objects.filter(email=data)
