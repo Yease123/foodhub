@@ -65,14 +65,14 @@
 
                     <a href="{% url 'login' %}"><button class="btn btn-outline-success me-3" type="submit">Login/Signup</button></a>
                     {% endif %}
-                    <button  class="fa-solid fa-cart-shopping fa-lg position-relative me-3" title="Cart" style="background:none;border:none">
+                    <a href="{% url 'cart' %}"><button  class="fa-solid fa-cart-shopping fa-lg position-relative me-3" title="Cart" style="background:none;border:none">
                        
                         <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">
                             
                           <span class="visually-hidden">unread messages</span>
-                          
+                      0
                         </span>
-                      </button>
+                      </button></a>
                     <button id="mode" class="fa-solid fa-sun fa-lg me-2" style="border:none; background: none; " onclick={change()}></button>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Food or Resturant" aria-label="Search">
@@ -123,7 +123,11 @@
     }
      
 
-   
+    window.onload = function() {
+        var someValue = localStorage.getItem('cartlength');
+        document.getElementById('cartCount').innerText = someValue;
+    };
+
   
 </script>
 </html>

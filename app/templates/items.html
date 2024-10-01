@@ -1,6 +1,7 @@
 <div id="downdiv" class="mt-3">
   <div class="container">
       <div class="row">
+        <input type="hidden" id="cartlength" value={{cartlength}}>
           {% for food in foodinfo %}
           <div class="col-4 pt-4">
               <div class="card" style="width: 18rem;">
@@ -27,7 +28,7 @@
 
                       
                       {% if request.user.is_authenticated %}
-                    {%if food.id in cartinfo%}
+                    {%if food.id in cartinfo %}
                       <button id="heartButton{{ forloop.counter }}" class="fa-solid fa-heart fa-lg" style="background:none;border:none;color:#de1717" onclick="cartclick(this,{{food.id}})"></button>
                   
                       {% else %}
@@ -67,11 +68,12 @@
            
         }
         
+        
        
       
     }
    
-    
+    localStorage.setItem("cartlength",document.getElementById("cartlength").value)
    
 </script>
 

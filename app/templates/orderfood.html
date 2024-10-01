@@ -25,7 +25,7 @@ FoodHub-OrderFood
                 Address at:{{foodinfo.resturant_name.address}}
                </div>
            
-            <button class="fa-regular fa-heart fa-lg" style="background:none;border:none"></button>
+            
             
         </div>
     </div>
@@ -47,7 +47,7 @@ FoodHub-OrderFood
                             <div class="mb-3">
                                 <input type="hidden" value="{{foodinfo.stock_level}}" id="stocklevel" readonly>
                                 <label  class="form-label">TO be Delived At:</label>
-                                <input type="Text"  value="{{request.user.address}}" class="form-control">
+                                <input type="Text"  value="{{request.user.address}}" class="form-control" id="address">
                             </div>
                             
                             
@@ -55,12 +55,13 @@ FoodHub-OrderFood
                             <div class="mb-3">
                                 <label  class="form-label">No of pieces</label>
                                 <input type="number" value="1" min='1'  id="piecesoforderfood" class="form-control">
-                                <p id="errormessage" style="color:red"></p>
+                               
                             </div>
                             <div class="mb-3">
                                 <label  class="form-label">Price</label>
                                 <input type="number"   value={{foodinfo.price}}  id="priceoforderfood" disabled="true" class="form-control">
                             </div>
+                            <p id="errormessage" style="color:red;font-weight: bold"></p>
                             <input class="btn btn-primary"id="oderfoodsubmit" type="Submit"  value="Order Now!" >
                             </form>
                      
@@ -75,6 +76,7 @@ FoodHub-OrderFood
   <script>
     
     const piece = document.getElementById("piecesoforderfood");
+    const address = document.getElementById("address").value;
     const price = document.getElementById("priceoforderfood"); 
     const stockLevelField =parseInt(document.getElementById("stocklevel").value);
     
@@ -107,7 +109,16 @@ FoodHub-OrderFood
         }
     });
    
-   
+     document.getElementById("orderform").addEventListener('submit', function(event)  {
+        
+        
+       
+        if (address=="None")
+         {
+            document.getElementById("errormessage").textContent="please enter a address"
+            event.preventDefault(); 
+        }
+    });
 
   </script>
   

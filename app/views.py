@@ -13,8 +13,8 @@ User=get_user_model()
 # Create your views here.
 def home(request):
     foodinformation=Food.objects.all()
-    if request.user:
-      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True)
+    if request.user.is_authenticated:
+      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
       cart_length=cartinfo.count()
     else:
          cartinfo=Usercart.objects.all()
@@ -174,3 +174,20 @@ def removeCart(request):
     cart.delete()
    
     return redirect('home')
+def cart(request):
+     cart_length=0
+     if request.user.is_authenticated:
+      cartinfo=Usercart.objects.filter(userid=request.user.id)
+      cart_length=cartinfo.count()
+      context={'cartinfo':cartinfo,'cartlength':cart_length}
+      if request.method=="POST":
+          cartid=request.POST.get("foodidofcart")
+          userid=request.POST.get("useridofcart")
+          cart=Usercart.objects.filter(userid=userid,id=cartid)
+          cart.delete()
+          cartinfo=Usercart.objects.filter(userid=request.user.id)
+          cart_length=cartinfo.count()
+          context={'cartinfo':cartinfo,'cartlength':cart_length}
+
+          
+     return render(request,'cart.html',context)
