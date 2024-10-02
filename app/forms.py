@@ -1,12 +1,12 @@
 from django import forms
-from .models import Food,orderedfoodbyuser
+from .models import Food,orderedfoodbyuser,resetpassword
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 import re
 User=get_user_model()
 class signupasuser(forms.Form):  
-    username=forms.CharField( max_length=20, required=True, error_messages={'required': 'Username is required'},widget=forms.EmailInput(attrs={'class':'input'}))
-    email=forms.EmailField( max_length=20, required=True, error_messages={'required': 'Email is required'},widget=forms.TextInput(attrs={'class':'input'}))
+    username=forms.CharField( max_length=50, required=True, error_messages={'required': 'Username is required'},widget=forms.EmailInput(attrs={'class':'input'}))
+    email=forms.EmailField( max_length=100, required=True, error_messages={'required': 'Email is required'},widget=forms.TextInput(attrs={'class':'input'}))
     password=forms.CharField( required=True, error_messages={'required': 'Password is required'},widget=forms.PasswordInput(attrs={'class':'input'}))
     address=forms.CharField( required=True, error_messages={'required': 'Address is required'},widget=forms.TextInput(attrs={'class':'input'}))
     phone=forms.CharField( required=True, error_messages={'required': 'Phone is required'},widget=forms.NumberInput(attrs={'class':'input'}))
@@ -222,6 +222,48 @@ class validatecustomer(forms.Form):
         
     
     
+class validateemail(forms.Form):
+    email=forms.CharField(required=True,error_messages={"required":" email is required"})
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+               if not User.objects.filter(email=email).exists():
+                 raise forms.ValidationError("email does not matches")
+        except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+        return email
+class validateresetpassword(forms.Form):
+    email=forms.CharField(required=True,error_messages={"required":" email is required"})
+    otp=forms.CharField(required=True,error_messages={"required":" otp is required"})
+    password=forms.CharField(required=True,error_messages={"required":" password is required"})
+    cpassword=forms.CharField(required=True,error_messages={"required":" confrim password is required"})
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+               if not resetpassword.objects.filter(resetuser__email=email).exists():
+                 raise forms.ValidationError("email does not matches")
+        except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+        return email
+    def clean_otp(self):
+        otp = self.cleaned_data.get('otp')
+        email = self.cleaned_data.get('email')
+        try:
+               if not resetpassword.objects.filter(resetuser__email=email , otp=otp).exists():
+                 raise forms.ValidationError("otp does not matches")
+        except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+        return otp
+    def clean_password(self):
+        password=self.cleaned_data.get("password")
+        cpassword=self.data.get("cpassword")
+        print(password,cpassword)
+        if len(password)<7:
+            raise forms.ValidationError("password length must be greater than 7")
+        if cpassword!=password:
+            raise forms.ValidationError("password and confrim password is not matched")
+
+        return password
 
 
 

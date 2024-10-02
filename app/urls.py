@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import home,login_user,signup_user,logoutuser,youhotel,orderfood,addCart,removeCart,cart,orderedfood,receivedorderbyhotel,deliveryman,customehome
+from .views import home,login_user,signup_user,logoutuser,youhotel,orderfood,addCart,removeCart,cart,orderedfood,receivedorderbyhotel,deliveryman,customehome,sendmail,resetuserpassword
 
 urlpatterns = [
        path('',home,name="home"),
@@ -14,7 +14,9 @@ urlpatterns = [
        path('cart/',cart ,name='cart'),
        path('orderedfood/',orderedfood ,name='orderedfood'),
        path('receivedorderbyhotel/',receivedorderbyhotel ,name='receivedorderbyhotel'),
-        path('deliveryman/',deliveryman ,name='deliveryman'),
-         path('home/<str:value>/',customehome ,name='customehome'),
+       path('deliveryman/',deliveryman ,name='deliveryman'),
+       path('home/<str:value>/',customehome ,name='customehome'),
+       path('forgetpassword/',sendmail ,name='sendmail'),
+         path('resetuserpassword/',resetuserpassword ,name='resetuserpassword'),
         
 ]

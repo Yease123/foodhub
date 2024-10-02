@@ -55,7 +55,9 @@ class orderedfoodbyuser(models.Model):
     deliverymanid=models.IntegerField(null=True)
     isdelivered=models.BooleanField(default=False)
 
-
+class resetpassword(models.Model):
+    resetuser=models.ForeignKey(customeuser,on_delete=models.CASCADE)
+    otp=models.CharField(max_length=6)
 
 
 

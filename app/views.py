@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .models import Food,Usercart,orderedfoodbyuser
+from .models import Food,Usercart,orderedfoodbyuser,resetpassword
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
@@ -16,7 +17,7 @@ def generateotp():
         otp += str(digit)  
     return otp
 
-from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer
+from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer,validateemail,validateresetpassword
 User=get_user_model()
 # Create your views here.
 def home(request):
@@ -313,3 +314,46 @@ def customehome(request,value):
          cartinfo=Usercart.objects.all()
     context={'foodinfo':foodinformation,'cartinfo':cartinfo,'cartlength':cart_length}
     return render(request,"home.html",context)
+def sendmail(request):
+    if request.method=="POST":
+        form=validateemail(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data["email"]
+            userinfo=User.objects.get(email=email)
+            if resetpassword.objects.filter(resetuser__email=email).exists():
+                resetinfo=resetpassword.objects.filter(resetuser__email=email)
+                resetinfo.delete()
+            otp=generateotp()
+            forgetuser=resetpassword.objects.create(resetuser=userinfo,otp=otp)
+            forgetuser.save()
+            subject="Reset your FoodHub password"
+            message="your otp is: "+otp
+            from_email=settings.EMAIL_HOST_USER
+            recipient_list=[email]
+            send_mail(subject,message,from_email,recipient_list)
+            return redirect("resetuserpassword")
+        else:
+            context={'form':form}
+    else:
+        form = validateemail()  
+        context= {'form':form}
+
+    return render(request,"forgetpassword.html",context)
+def resetuserpassword(request):
+    if request.method=="POST":
+        form=validateresetpassword(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data["email"]
+            password=form.cleaned_data["password"]
+            userdatainfo=User.objects.get(email=email)
+            userdatainfo.set_password(password)
+            userdatainfo.save()
+           
+            
+            return redirect("login")
+        else:
+            context={'form':form}
+    else:
+        form = validateemail()  
+        context= {'form':form}
+    return render(request,"resetpassword.html",context)
