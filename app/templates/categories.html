@@ -1,44 +1,54 @@
 <div id="categories">
-    <i class="fa-duotone fa-solid fa-layer-group fa-lg"></i> Categories
-  </div>
-  <div id="items">
-    <ul id="unorder">
+  <i class="fa-duotone fa-solid fa-layer-group fa-lg"></i> Categories
+</div>
+<div id="items">
+  <ul id="unorder">
       <li>Fast Food
-        <ul>
-          <li>Pizza</li> <li>Burger</li> <li>Fries</li> <li>Fried Chicken</li> <li>Pasta</li>
-
-        </ul>
-        
+          <ul>
+              <li><a href="{% url 'customehome' value='pizza' %}" style="background:none;border:none;text-decoration:none;">Pizza</a></li>
+              <li><a href="{% url 'customehome' value='burger' %}" style="background:none;border:none;text-decoration:none;">Burger</a></li>
+              <li><a href="{% url 'customehome' value='fries' %}" style="background:none;border:none;text-decoration:none;">Fries</a></li>
+              <li><a href="{% url 'customehome' value='fried chicken' %}" style="background:none;border:none;text-decoration:none;">Fried Chicken</a></li>
+              <li><a href="{% url 'customehome' value='pasta' %}" style="background:none;border:none;text-decoration:none;">Pasta</a></li>
+          </ul>
       </li>
-      <li>Fruit and vegitables
-        <ul>
-          <li>Regular Vegetables</li>
-          <li>Ozonated Vegetables</li>
-          <li>Fruits</li>
-        </ul>
+      <li>Fruit and Vegetables
+          <ul>
+              <li><a href="{% url 'customehome' value='regular Vegetables' %}" style="background:none;border:none;text-decoration:none;">Regular Vegetables</a></li>
+              <li><a href="{% url 'customehome' value='Ozonated vegitables' %}" style="background:none;border:none;text-decoration:none;">Ozonated Vegetables</a></li>
+              <li><a href="{% url 'customehome' value='fruits' %}" style="background:none;border:none;text-decoration:none;">Fruits</a></li>
+          </ul>
       </li>
       <li>Egg & Dairy
-        <ul><li>Egg</li> <li>cheese</li> <li>Milk</li></ul>
-         </li>
-      
+          <ul>
+              <li><a href="{% url 'customehome' value='egg' %}" style="background:none;border:none;text-decoration:none;">Egg</a></li>
+              <li><a href="{% url 'customehome' value='Cheese' %}" style="background:none;border:none;text-decoration:none;">Cheese</a></li>
+              <li><a href="{% url 'customehome' value='Milk' %}" style="background:none;border:none;text-decoration:none;">Milk</a></li>
+          </ul>
+      </li>
       <li>Meat, Fish & Seafood
-        <ul>
-          <li>Chicken</li> <li>Mutton</li> <li>Fish</li> <li>Pork</li>
-        </ul>
+          <ul>
+              <li><a href="{% url 'customehome' value='chickenMeat' %}" style="background:none;border:none;text-decoration:none;">Chicken</a></li>
+              <li><a href="{% url 'customehome' value='mutton meat' %}" style="background:none;border:none;text-decoration:none;">Mutton</a></li>
+              <li><a href="{% url 'customehome' value='fish' %}" style="background:none;border:none;text-decoration:none;">Fish</a></li>
+              <li><a href="{% url 'customehome' value='pork meat' %}" style="background:none;border:none;text-decoration:none;">Pork</a></li>
+          </ul>
       </li>
       <li>Beverages
-        <ul>
-          <li>Ready to Drink</li> <li>Make </li>
-        </ul>
+          <ul>
+              <li><a href="{% url 'customehome' value='ready to drink' %}" style="background:none;border:none;text-decoration:none;">Ready to Drink</a></li>
+              <li><a href="{% url 'customehome' value='make' %}" style="background:none;border:none;text-decoration:none;">Make</a></li>
+          </ul>
       </li>
-      <li>Oil, Spice & Condiments</li>
-      <li>Soup, Sauce & Seasonings</li>
-      <li>Baking & Cooking</li>
-      <li>Rice & Pulses</li>
-      <li>Household</li>
-<li>Ready to cook
-  <ul><li>Veg Items</li></ul>
-</li>
-    </ul>
-
-  </div>
+      <li><a href="{% url 'customehome' value='oil spice Condiments' %}" style="background:none;border:none;text-decoration:none;">Oil, Spice & Condiments</a></li>
+      <li><a href="{% url 'customehome' value='soup sauce seasonings' %}" style="background:none;border:none;text-decoration:none;">Soup, Sauce & Seasonings</a></li>
+      <li><a href="{% url 'customehome' value='baking and cooking' %}" style="background:none;border:none;text-decoration:none;">Baking & Cooking</a></li>
+      <li><a href="{% url 'customehome' value='rice Pulses' %}" style="background:none;border:none;text-decoration:none;">Rice & Pulses</a></li>
+      <li><a href="{% url 'customehome' value='Household' %}" style="background:none;border:none;text-decoration:none;">Household</a></li>
+      <li>Ready to Cook
+          <ul>
+              <li><a href="{% url 'customehome' value='veg' %}" style="background:none;border:none;text-decoration:none;">Veg Items</a></li>
+          </ul>
+      </li>
+  </ul>
+</div>

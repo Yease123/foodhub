@@ -1,17 +1,26 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Food,Usercart
+from .models import Food,Usercart,orderedfoodbyuser
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
+import random
+from django.db.models import Q
 
+def generateotp():
+    otp = ""
+    for _ in range(6):
+        digit = random.randint(0, 9)  
+        otp += str(digit)  
+    return otp
 
-from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate
+from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer
 User=get_user_model()
 # Create your views here.
 def home(request):
+    cart_length=0
     foodinformation=Food.objects.all()
     if request.user.is_authenticated:
       cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
@@ -156,6 +165,34 @@ def youhotel(request):
 def orderfood(request,pk):
     fooddata=Food.objects.get(id=pk)
     context={'foodinfo':fooddata}
+    if request.method=="POST":
+        form=validateorder(request.POST)
+        if form.is_valid():
+            print("hi")
+           
+            totalamount=form.cleaned_data["totalamount"]
+            totalprice=form.cleaned_data["totalprice"]
+            address=form.cleaned_data["address"]
+            
+            foodinfo=orderedfoodbyuser.objects.create(orderuserid=request.user,orderfoodid=fooddata,totalamount=totalamount,totalprice=totalprice,addresstodeliver=address)
+            foodinfo.save()
+           
+            if orderedfoodbyuser.objects.filter(orderfoodid=pk).exists():
+                fooddatainfo=Food.objects.get(id=pk)
+                print(fooddatainfo)
+                if fooddatainfo.stock_level>=totalamount:
+                    fooddatainfo.stock_level=fooddatainfo.stock_level-totalamount
+                    fooddatainfo.save()
+                   
+                
+
+            return redirect('orderedfood')
+        else:
+             print("Form errors:", form.errors)  
+             context['form']=form
+    else:
+        form = validateorder()  
+        context['form'] = form
     return render(request,"orderfood.html",context)
 
 def addCart(request):
@@ -191,3 +228,88 @@ def cart(request):
 
           
      return render(request,'cart.html',context)
+@login_required
+def orderedfood(request):
+    orderedfoodinfo=orderedfoodbyuser.objects.filter(orderuserid=request.user)
+    
+    context={"orderedfoodinfo":orderedfoodinfo}
+    return render(request,'orderedfood.html',context)
+@login_required
+def receivedorderbyhotel(request):
+    orderinfo=orderedfoodbyuser.objects.filter(orderfoodid__resturant_name__id=request.user.id)
+    context={'orderinfo':orderinfo}
+    if request.method=="POST":
+        discard=request.POST.get("discard")
+        accept=request.POST.get("accept")
+        foodid=request.POST.get("foodid")
+       
+        if accept:
+            validfood=orderedfoodbyuser.objects.get(id=foodid)
+            if validfood.orderfoodid.resturant_name.id==request.user.id:
+                validfood.listedbyhotel=True
+                otp=generateotp()
+                print(otp)
+                validfood.otpfordeliveryman=otp
+                validfood.save()
+                return redirect("receivedorderbyhotel")
+
+        if discard:
+            validfood=orderedfoodbyuser.objects.get(id=foodid)
+            if validfood.orderfoodid.resturant_name.id==request.user.id:
+                validfood.rejectbyhotel=True
+                validfood.save()
+                updatefood=validfood.orderfoodid
+                updatefood.stock_level=updatefood.stock_level+validfood.totalamount
+                updatefood.save()
+
+                return redirect("receivedorderbyhotel")
+            
+    return render(request,"hotelreceiveorder.html",context)
+@login_required
+def deliveryman(request):
+    orderinfo=orderedfoodbyuser.objects.filter(listedbyhotel=True)
+    context={'orderinfo':orderinfo}
+    if request.method=="POST" and request.POST.get("validation")=="fordriver":
+        
+        form=validatedelivery(request.POST)
+        if form.is_valid():
+           foodid=form.cleaned_data["foodid"]
+           userid=form.cleaned_data["userid"]
+           orderfoodinfo=orderedfoodbyuser.objects.get(id=foodid)
+           orderfoodinfo.pickbydelivery=True
+           orderfoodinfo.deliverymanid=userid
+           otp=generateotp()
+           orderfoodinfo.otpforuser=otp
+           orderfoodinfo.save()
+        else:
+            context['form']=form
+            print("Form errors:", form.errors) 
+    else:
+         form = validateorder()  
+         context['form'] = form
+    if request.method=="POST" and request.POST.get("validation")=="forcustomer":
+        form=validatecustomer(request.POST)
+        if form.is_valid():
+           foodid=form.cleaned_data["foodid"]
+           userid=form.cleaned_data["userid"]
+           orderfoodinfo=orderedfoodbyuser.objects.get(id=foodid)
+           orderfoodinfo.isdelivered=True
+           orderfoodinfo.save()
+        else:
+            context['form']=form
+            print("Form errors:", form.errors) 
+    else:
+         form = validateorder()  
+         context['form'] = form
+    return render(request,"delivery.html",context)
+def customehome(request,value):
+    cart_length=0
+    print(value)
+    foodinformation=Food.objects.filter(Q(foodname__icontains=value) | Q(about__icontains=value))
+    if request.user.is_authenticated:
+      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
+      cart_length=cartinfo.count()
+    else:
+         cartinfo=Usercart.objects.all()
+    context={'foodinfo':foodinformation,'cartinfo':cartinfo,'cartlength':cart_length}
+    return render(request,"home.html",context)

@@ -20,14 +20,18 @@
                    
                 </ul>
                 <div class="d-flex align-items-center ms-auto">
-                    <a href=""><i class="fa-solid fa-burger fa-lg me-4"  style="color: #ffffff;" title="Your Order"></i></a>
+                    <a href="{% url 'orderedfood' %}"><i class="fa-solid fa-burger fa-lg me-4"  style="color: #ffffff;" title="Your Order"></i></a>
                     {% if request.user.is_authenticated %}
                     {% if request.user.approved == True and  request.user.isresturant == True  %}
+                    <a href="{% url 'receivedorderbyhotel' %}"><span class="material-symbols-outlined me-3 mt-2" title="Recived order" style="color: #ffffff;">
+                        cooking
+                        </span></a>
                     <a href="{% url 'youhotel' %}"><i class="fa-solid fa-hotel fa-lg me-3" title="your hotel" style="color: #ffffff;"></i></a>
+                    
                    
                     {% endif %}
                     {% if request.user.approved == True and  request.user.isdelivery == True  %}
-                    <a href=""><i class="fa-solid fa-truck fa-lg me-3" style="color: #ffffff;"></i></a>
+                    <a href="{% url 'deliveryman' %}"><i class="fa-solid fa-truck fa-lg me-3" style="color: #ffffff;"></i></a>
                    
                     {% endif %}
                     {% endif %}

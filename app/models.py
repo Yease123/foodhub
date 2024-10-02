@@ -39,6 +39,22 @@ class Food(models.Model):
 class Usercart(models.Model):
     userid=models.ForeignKey(customeuser,on_delete=models.CASCADE)
     foodid=models.ForeignKey(Food,on_delete=models.CASCADE)
+class orderedfoodbyuser(models.Model):
+    orderuserid=models.ForeignKey(customeuser,on_delete=models.CASCADE)
+    orderfoodid=models.ForeignKey(Food,on_delete=models.CASCADE)
+    ordered_at = models.DateTimeField(auto_now_add=True)
+    totalamount=models.IntegerField()
+    totalprice=models.IntegerField()
+    pickbydelivery=models.BooleanField(default=False)
+    pickbyhotel=models.BooleanField(default=False)
+    listedbyhotel=models.BooleanField(default=False)
+    rejectbyhotel=models.BooleanField(default=False)
+    addresstodeliver=models.CharField(max_length=100,null=True)
+    otpfordeliveryman=models.CharField(max_length=6,null=True)
+    otpforuser=models.CharField(max_length=6,null=True)
+    deliverymanid=models.IntegerField(null=True)
+    isdelivered=models.BooleanField(default=False)
+
 
 
 

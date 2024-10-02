@@ -3,6 +3,7 @@
       <div class="row">
         <input type="hidden" id="cartlength" value={{cartlength}}>
           {% for food in foodinfo %}
+          {% if food.resturant_name.isopene %}
           <div class="col-4 pt-4">
               <div class="card" style="width: 18rem;">
                   <img src="{{food.photo.url}}" class="card-img-top" alt="News image">
@@ -42,8 +43,13 @@
                   </div>
               </div>
           </div>
+          {% endif %}
           {% endfor %}
-
+{% if not foodinfo %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <h1>No Item is Available</h1>
+</div>
+{% endif %}
 
       </div>
   </div>

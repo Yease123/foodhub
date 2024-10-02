@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}
+FoodHub-Delivery
+{% endblock title %}
+{% block content %}
+
+
+{% for items in orderinfo %}
+
+{% if not items.pickbydelivery %}
+<h4>Order you can Pick:</h4>
+<div class="container mt-5">
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+
+                <img src="{{items.orderfoodid.photo.url}}" alt="Item Image" style="width: 100px; height: 100px; object-fit: cover;" class="me-3">
+                <div>
+                    <h5 class="card-title">{{items.orderfoodid.foodname}}</h5>
+                    <p class="card-text">Address to deliver:{{items.addresstodeliver}}</p>
+                    <p class="cart-text">From: {{items.orderfoodid.resturant_name.username}}</p>
+                    <p class='cart-text'>Pick From: {{items.orderfoodid.resturant_name.address}}</p>
+                    <p class='cart-text'>Resturant Number:{{items.orderfoodid.resturant_name.phonenumber}}</p>
+                    <p class='cart-text'>Customer Number:{{ items.orderuserid.phonenumber }}</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <form method="post" class="me-2">
+                    {% csrf_token %}
+                    <label for="">Enter Otp from hotel</label><br>
+                    <input type="hidden" name="validation" value="fordriver">
+                    <input type="text"  placeholder="Enter the otp" name="otp">
+                    <input type="hidden" name="foodid" value={{items.id}}>
+                    <input type="hidden" name="userid" value={{request.user.id}}>
+                    <input type="submit" value="pickup" class="btn btn-danger">
+                </form>
+               
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+
+{% for items in orderinfo %}
+{% if request.user.id == items.deliverymanid and  not items.isdelivered %}
+<h4>Order you have pick :</h4>
+<div class="container mt-5">
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+
+                <img src="{{items.orderfoodid.photo.url}}" alt="Item Image" style="width: 100px; height: 100px; object-fit: cover;" class="me-3">
+                <div>
+                    <h5 class="card-title">{{items.orderfoodid.foodname}}</h5>
+                    <p class="card-text">Address to deliver:{{items.addresstodeliver}}</p>
+                    <p class="cart-text">From: {{items.orderfoodid.resturant_name.username}}</p>
+                    <p class='cart-text'>Pick From: {{items.orderfoodid.resturant_name.address}}</p>
+                    <p class='cart-text'>Resturant Number:{{items.orderfoodid.resturant_name.phonenumber}}</p>
+                    <p class='cart-text'>Customer Number:{{ items.orderuserid.phonenumber }}</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <form method="post" class="me-2">
+                    {% csrf_token %}
+                    <label for="">Enter Otp from customer:</label><br>
+                    <input type="hidden" name="validation" value="forcustomer">
+                    <input type="text"  placeholder="Enter the otp" name="otp">
+                    <input type="hidden" name="foodid" value={{items.id}}>
+                    <input type="hidden" name="userid" value={{request.user.id}}>
+                    <input type="submit" value="Delivered to user" class="btn btn-danger">
+                </form>
+               
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% for items in orderinfo %}
+{% if request.user.id == items.deliverymanid and items.isdelivered %}
+<h4>Order you have delivered :</h4>
+<div class="container mt-5">
+   
+    <div class="card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+
+                <img src="{{items.orderfoodid.photo.url}}" alt="Item Image" style="width: 100px; height: 100px; object-fit: cover;" class="me-3">
+                <div>
+                    <h5 class="card-title">{{items.orderfoodid.foodname}}</h5>
+                    <p class="card-text">Address to deliver:{{items.addresstodeliver}}</p>
+                    <p class="cart-text">From: {{items.orderfoodid.resturant_name.username}}</p>
+                    <p class='cart-text'>Pick From: {{items.orderfoodid.resturant_name.address}}</p>
+                    <p class='cart-text'>Resturant Number:{{items.orderfoodid.resturant_name.phonenumber}}</p>
+                    <p class='cart-text'>Customer Number:{{ items.orderuserid.phonenumber }}</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+              
+               
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock content %}

@@ -1,5 +1,5 @@
 from django import forms
-
+from .models import Food,orderedfoodbyuser
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 import re
@@ -152,6 +152,82 @@ class loginvalidate(forms.Form):
 
 
         return data
+class validateorder(forms.Form):
+    totalamount=forms.IntegerField(required=True,error_messages={"required":" total amount is required"})
+    totalprice=forms.IntegerField(required=True,error_messages={"required":"total price is required"})
+    address=forms.CharField(required=True,error_messages={"required":"address field is required"})
+    def clean_totalamount(self):
+        totalamount = self.cleaned_data.get('totalamount')
+        food_id = self.data.get('foodid')
+        if food_id:
+            try:
+                food_item = Food.objects.get(id=food_id)
+                if totalamount > food_item.stock_level:
+                    raise forms.ValidationError("Total amount exceeds available stock.")
+                if not food_item.resturant_name.isopene:
+                    raise forms.ValidationError("Sorry the resturant is closed")
+
+            except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+
+        return totalamount
+class validatedelivery(forms.Form):
+    otp=forms.CharField(required=True,error_messages={"required":" Otp is required"})
+    foodid=forms.IntegerField(required=True,error_messages={"required":"Invalid food pickup"})
+    userid=forms.IntegerField(required=True,error_messages={"required":"Invalid user"})
+    
+    def clean_otp(self):
+        otp = self.cleaned_data.get('otp')
+        foodid = self.data.get('foodid')
+        userid=self.data.get('userid')
+        if foodid:
+          try:
+                food_item = orderedfoodbyuser.objects.get(id=foodid)
+                if otp != food_item.otpfordeliveryman:
+                    print(otp)
+                    print(food_item.otpfordeliveryman)
+                    raise forms.ValidationError("Otp does not matches")
+                userinfo=User.objects.get(id=userid)
+                if not userinfo. isdelivery:
+                    raise forms.ValidationError("you are not allowed to pick order")
+                
+
+          except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+        return otp
+class validatecustomer(forms.Form):
+    otp=forms.CharField(required=True,error_messages={"required":" Otp is required"})
+    foodid=forms.IntegerField(required=True,error_messages={"required":"Invalid food pickup"})
+    userid=forms.IntegerField(required=True,error_messages={"required":"Invalid user"})
+    
+    def clean_otp(self):
+        otp = self.cleaned_data.get('otp')
+        foodid = self.data.get('foodid')
+        userid=self.data.get('userid')
+        if foodid:
+          try:
+                food_item = orderedfoodbyuser.objects.get(id=foodid)
+                if otp != food_item.otpforuser:
+                   
+                    raise forms.ValidationError("Otp does not matches")
+                userinfo=User.objects.get(id=userid)
+                if not userinfo. isdelivery:
+                    raise forms.ValidationError("you are not allowed to deliver order")
+                
+
+          except Food.DoesNotExist:
+                raise forms.ValidationError("Food item does not exist.")
+        return otp
+
+        
+    
+    
+
+
+
+
+    
+
 
 
 

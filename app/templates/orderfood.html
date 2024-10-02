@@ -25,7 +25,7 @@ FoodHub-OrderFood
                 Address at:{{foodinfo.resturant_name.address}}
                </div>
            
-            
+               <input type="hidden"   value={{foodinfo.price}}  id="priceoforderfood">
             
         </div>
     </div>
@@ -41,25 +41,40 @@ FoodHub-OrderFood
                 <div class="card mt-5">
                     <div class="card-body">
                         <h3 class="card-title text-center">Order Food</h3>
+                        {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
                         <form method="post" id="orderform">
                             {% csrf_token %}
                             
                             <div class="mb-3">
                                 <input type="hidden" value="{{foodinfo.stock_level}}" id="stocklevel" readonly>
+                                <input type="hidden" value="{{foodinfo.id}}" name="foodid" id="stocklevel" readonly>
                                 <label  class="form-label">TO be Delived At:</label>
-                                <input type="Text"  value="{{request.user.address}}" class="form-control" id="address">
+                                <input type="Text"  value="" class="form-control" id="address" name="address">
                             </div>
                             
                             
                            
                             <div class="mb-3">
                                 <label  class="form-label">No of pieces</label>
-                                <input type="number" value="1" min='1'  id="piecesoforderfood" class="form-control">
+                                <input type="number" value="" min='1'  id="piecesoforderfood" class="form-control" name="totalamount">
                                
                             </div>
                             <div class="mb-3">
                                 <label  class="form-label">Price</label>
-                                <input type="number"   value={{foodinfo.price}}  id="priceoforderfood" disabled="true" class="form-control">
+                                <input type="number"   value='' name="totalprice" id="price" readonly class="form-control">
                             </div>
                             <p id="errormessage" style="color:red;font-weight: bold"></p>
                             <input class="btn btn-primary"id="oderfoodsubmit" type="Submit"  value="Order Now!" >
@@ -74,53 +89,43 @@ FoodHub-OrderFood
   </div>
   {% block script %}
   <script>
-    
     const piece = document.getElementById("piecesoforderfood");
-    const address = document.getElementById("address").value;
-    const price = document.getElementById("priceoforderfood"); 
-    const stockLevelField =parseInt(document.getElementById("stocklevel").value);
+    const priceField = document.getElementById("priceoforderfood");
+    const price = document.getElementById("price");
+    const addressField = document.getElementById("address");
+    const stockLevelField = parseInt(document.getElementById("stocklevel").value);
     
-    const exactprice = parseFloat(price.value); 
+    // Initialize the exact price when the script runs
+    const exactPrice = parseFloat(priceField.value); 
+    
     piece.addEventListener('input', function(event) {
-    
-
-        const piecesValue = parseInt(piece.value);
-        
-       
-        
-      
-      
-           
-            const totalPrice = piecesValue * exactprice;
-            
-           
-            price.value = totalPrice.toFixed(2); 
+        const piecesValue = parseInt(piece.value) || 0; // Default to 0 if NaN
+        const totalPrice = piecesValue * exactPrice;
+        price.value = totalPrice.toFixed(2); 
     }); 
-    document.getElementById("orderform").addEventListener('submit', function(event)  {
-        const piecesValue = parseInt(piece.value);
-       
+    
+    document.getElementById("orderform").addEventListener('submit', function(event) {
+        const piecesValue = parseInt(piece.value) || 0; // Default to 0 if NaN
+        const addressValue = addressField.value.trim(); // Trim whitespace
         
-       
-        if (isNaN(piecesValue) || piecesValue < 1 || stockLevelField<piecesValue)
-         {
-            document.getElementById("errormessage").textContent="no fo item is greater than item at stock level"
-            event.preventDefault(); // Stop the form from submitting
-            
+        
+        let errorMessage = "";
+        
+        if (isNaN(piecesValue) || piecesValue < 1 || stockLevelField < piecesValue) {
+            errorMessage += "Number of items cannot exceed stock level.\n";
         }
-    });
-   
-     document.getElementById("orderform").addEventListener('submit', function(event)  {
         
+        if (!addressValue) {
+            errorMessage += "Please enter an address.\n";
+        }
+
         
-       
-        if (address=="None")
-         {
-            document.getElementById("errormessage").textContent="please enter a address"
+        if (errorMessage) {
+            document.getElementById("errormessage").textContent = errorMessage;
             event.preventDefault(); 
         }
     });
-
   </script>
-  
-  {% endblock %}
+{% endblock %}
+
 {% endblock %}
