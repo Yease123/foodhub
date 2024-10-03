@@ -44,15 +44,15 @@ class signupasuser(forms.Form):
             raise forms.ValidationError("Phone number must be of 10 digit")
         return data
 class sigupasresturant(forms.Form):
-    username=forms.CharField( max_length=20, required=True, error_messages={'required': 'Username is required'},widget=forms.TextInput(attrs={'class':'input'}))
-    email=forms.CharField(  required=True, error_messages={'required': 'Email is required'},widget=forms.EmailInput(attrs={'class':'input'}))
-    address=forms.CharField(  required=True, error_messages={'required': 'Address is required'},widget=forms.TextInput(attrs={'class':'input'}))
-    logititude=forms.CharField( required=True, error_messages={'required': 'logititude is required'},widget=forms.NumberInput(attrs={'class':'input'}))
-    latitude=forms.CharField(  required=True, error_messages={'required': 'latitude is required'},widget=forms.NumberInput(attrs={'class':'input'}))
-    phone=forms.CharField( max_length=10, required=True, error_messages={'required': 'Phone is required'},widget=forms.NumberInput(attrs={'class':'input'}))
-    
-    password=forms.CharField(  required=True, error_messages={'required': 'Password  is required'},widget=forms.PasswordInput(attrs={'class':'input'}))
-    photo=forms.ImageField(required=True, error_messages={'required': 'photo  is required'},widget=forms.FileInput(attrs={'class':'input'}))
+    username=forms.CharField( max_length=20, required=True, error_messages={'required': 'Username is required'})
+    email=forms.CharField(  required=True, error_messages={'required': 'Email is required'})
+    address=forms.CharField(  required=True, error_messages={'required': 'Address is required'})
+    logititude=forms.CharField( required=True, error_messages={'required': 'logititude is required'})
+    latitude=forms.CharField(  required=True, error_messages={'required': 'latitude is required'})
+    phone=forms.CharField( max_length=10, required=True, error_messages={'required': 'Phone is required'})
+    cpassword=forms.CharField(  required=True, error_messages={'required': 'confrim Password  is required'})
+    password=forms.CharField(  required=True, error_messages={'required': 'Password  is required'})
+    photo=forms.ImageField(required=True, error_messages={'required': 'photo  is required'})
     
     def clean_username(self):
         data=self.cleaned_data.get("username")
@@ -77,9 +77,12 @@ class sigupasresturant(forms.Form):
             raise forms.ValidationError("email is already taken")
         return data
     def clean_password(self):
+        cpassword=self.get("password")
         data=self.cleaned_data.get("password")
         if len(data)<7:
             raise forms.ValidationError("password length must be greater than 7")
+        if cpassword!=data:
+            raise forms.ValidationError("password and confrim password is not same")
         return data
     def clean_phone(self):
         data=self.cleaned_data.get("phone")
@@ -92,13 +95,13 @@ class sigupasresturant(forms.Form):
         
    
 class signupasdelivery(forms.Form):
-    password=forms.CharField(max_length=20, required=True,error_messages={"required":"password is required"},widget=forms.PasswordInput(attrs={'class':'input'}))
-    username=forms.CharField(max_length=20, required=True,error_messages={"required":"Username is required"},widget=forms.TextInput(attrs={'class':'input'}))
-    email=forms.EmailField(required=True,error_messages={"required":"Email is required"},widget=forms.EmailInput(attrs={'class':'input'}))
-    address=forms.CharField(required=True,error_messages={"required":"address field is required"},widget=forms.TextInput(attrs={"class":"input"}))
-    phone=forms.CharField(required=True,error_messages={"required":"phone is required"},widget=forms.NumberInput(attrs={"class":"inpit"}))
-    photo=forms.ImageField(required=True,error_messages={"required":"photo is required"},widget=forms.FileInput(attrs={"class":"input"}))
-    
+    password=forms.CharField(max_length=20, required=True,error_messages={"required":"password is required"})
+    username=forms.CharField(max_length=20, required=True,error_messages={"required":"Username is required"})
+    email=forms.EmailField(required=True,error_messages={"required":"Email is required"})
+    address=forms.CharField(required=True,error_messages={"required":"address field is required"})
+    phone=forms.CharField(required=True,error_messages={"required":"phone is required"})
+    photo=forms.ImageField(required=True,error_messages={"required":"photo is required"})
+    cpassword=forms.CharField(max_length=20, required=True,error_messages={"required":"confrim password is required"})
     
     def clean_username(self):
         data=self.cleaned_data.get("username")
@@ -113,9 +116,13 @@ class signupasdelivery(forms.Form):
         return data
     def clean_password(self):
         data=self.cleaned_data.get("password")
+        cpassword=self.get("password")
         if len(data)<7:
             raise forms.ValidationError("password length must be greater than 7")
+        if cpassword!=data:
+            raise forms.ValidationError("password and confirmpassword is not same")
         return data
+    
     def clean_email(self):
         data=self.cleaned_data.get("email")
         email_regex = (

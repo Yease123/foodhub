@@ -49,9 +49,16 @@ FoodHub-Received Order
                             <p class="cart-text">OTP for deliveryman: {{items.otpfordeliveryman}}</p>
                         </div>
                     </div>
+                    {% if  not items.isdelivered %}
                     <div class="d-flex align-items-center">
-                        <button class="btn btn-success">You received this  order</button>
+                        <button class="btn btn-secondary">You received this  order</button>
                     </div>
+                    {% else %}
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-success">Order received by user</button>
+                    </div>
+                    {% endif %}
+                   
                     
                 </div>
             </div>
