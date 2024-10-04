@@ -14,7 +14,7 @@ class adminusercart(admin.ModelAdmin):
     list_display=["userid","foodid"]
 @admin.register(Food)
 class adminfood(admin.ModelAdmin):
-    list_display=[ "foodname","about","price","resturant_name","category" ,"isveg","available","promotion" ,"stock_level" ,"created_at" ,"updated_at" ,"photo"]
+    list_display=[ "id","foodname","about","price","resturant_name","category" ,"isveg","available","promotion" ,"stock_level" ,"created_at" ,"updated_at" ,"photo"]
 @admin.register(customeuser)
 class adminuser(admin.ModelAdmin):
     list_display=[ "username","email","latitude" ,"longitude" ,"approved","isopene","address","phonenumber","created_at","updated_at" ,"isresturant","isdelivery","isuser","photo"]

@@ -35,6 +35,23 @@ FoodHub-YourResturant
             <div class="card mt-5">
                 <div class="card-body">
                     <h3 class="card-title text-center">Add food</h3>
+                    {% for field in form %}
+                   {% if field.errors %}
+                      {% for error in field.errors %}
+                           <div class="alert alert-danger" role="alert">
+                               {{ error }}
+                           </div>
+                      {% endfor %}
+                   {% endif %}
+               {% endfor %}
+              
+               {% if messages %}
+
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert"> {{ message }} </div>
+    {% endfor %}
+
+{% endif %}
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="hiddenfield" value="insertingfood">
@@ -103,7 +120,7 @@ FoodHub-YourResturant
                             Listed by :{{food.resturant_name}}
                             Address at:{{food.resturant_name.address}}
                            </div>
-                        <a href="" class="btn btn-primary">Edit food </a>
+                        <a href="{% url 'editfoodbyresturant' pk=food.id %}" class="btn btn-primary">Edit food </a>
                         
                     </div>
                 </div>

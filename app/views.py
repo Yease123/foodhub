@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 import random
 from django.db.models import Q
+from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer,validateemail,validateresetpassword,foodsubmit
 
 def generateotp():
     otp = ""
@@ -17,7 +18,7 @@ def generateotp():
         otp += str(digit)  
     return otp
 
-from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer,validateemail,validateresetpassword
+
 User=get_user_model()
 # Create your views here.
 def home(request):
@@ -130,38 +131,50 @@ def logoutuser(request):
     return redirect("home")
 @login_required
 def youhotel(request):
-    if request.method=="POST" :
-        if request.POST.get("hiddenfield")=="updatingstatus":
-                
-            status=request.POST.get("submitstatus")
-            
-            user=request.user
-            userdata=User.objects.filter(email=user.email)
-            if(status=='open'):
-                userdata.update(isopene=True)
-                return redirect("youhotel")
-            if(status=='close'):
-                userdata.update(isopene=False)
-                return redirect("youhotel")
-        elif request.POST.get("hiddenfield")=="insertingfood":
-            name=request.POST.get("foodname")
-            about=request.POST.get("about")
-            price=request.POST.get("price")
-            category=request.POST.get("category")
-            stock=request.POST.get("stock")
-            photo=request.FILES.get("photo")
-            veg=request.POST.get("switch")
-            if veg=='on':
-                veg=True
-            else:
-                veg=False
-            orderby=request.user
-            fooddata=Food.objects.create(foodname=name,about=about,price=price,photo=photo,isveg=veg,stock_level=stock,category=category,resturant_name=orderby)
-            fooddata.save()
-    foodinformation=Food.objects.filter(resturant_name=request.user)
-    context={'foodinfo':foodinformation}
+    context = {}
 
-    return render(request,"yourhotel.html",context)
+    if request.method == "POST":
+        hidden_field = request.POST.get("hiddenfield")
+        
+        if hidden_field == "updatingstatus":
+            status = request.POST.get("submitstatus")
+            user = request.user
+            
+            # Update the user's open status
+            user.isopene = (status == 'open')
+            user.save()
+            return redirect("youhotel")
+        
+        elif hidden_field == "insertingfood":
+            form = foodsubmit(request.POST, request.FILES)
+            veg = request.POST.get("switch") == 'on'  # Get the checkbox value
+            
+            if form.is_valid():
+                name = form.cleaned_data["foodname"]
+                about = form.cleaned_data["about"]
+                price = form.cleaned_data["price"]
+                category = form.cleaned_data["category"]
+                stock = form.cleaned_data["stock"]
+                photo = form.cleaned_data["photo"]
+                
+                # Create the food item
+                Food.objects.create(foodname=name,about=about,price=price,photo=photo,isveg=veg,stock_level=stock,category=category,resturant_name=request.user)
+                
+                messages.success(request, "Food item added successfully!")
+                return redirect("youhotel")
+            else:
+                context['form'] = form 
+
+    else:
+        form = foodsubmit()  
+        context['form'] = form
+
+ 
+    foodinformation = Food.objects.filter(resturant_name=request.user)
+    context['foodinfo'] = foodinformation
+
+    return render(request, "yourhotel.html", context)  
+
 @login_required
 def orderfood(request,pk):
     fooddata=Food.objects.get(id=pk)
@@ -303,17 +316,7 @@ def deliveryman(request):
          form = validateorder()  
          context['form'] = form
     return render(request,"delivery.html",context)
-def customehome(request,value):
-    cart_length=0
-    print(value)
-    foodinformation=Food.objects.filter(Q(foodname__icontains=value) | Q(about__icontains=value))
-    if request.user.is_authenticated:
-      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
-      cart_length=cartinfo.count()
-    else:
-         cartinfo=Usercart.objects.all()
-    context={'foodinfo':foodinformation,'cartinfo':cartinfo,'cartlength':cart_length}
-    return render(request,"home.html",context)
+
 def sendmail(request):
     if request.method=="POST":
         form=validateemail(request.POST)
@@ -357,3 +360,78 @@ def resetuserpassword(request):
         form = validateemail()  
         context= {'form':form}
     return render(request,"resetpassword.html",context)
+
+
+
+def custom_search(value):
+    all_food_items = Food.objects.all()
+    results = []
+    for food in all_food_items:
+        if value.lower() in food.foodname.lower() or value.lower() in food.about.lower() or value.lower() in food.resturant_name.username:
+            results.append(food)
+
+    return results
+
+
+def customehome(request,value):
+    cart_length=0
+   
+    foodinformation=custom_search(value)
+    if request.user.is_authenticated:
+      cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
+      cart_length=cartinfo.count()
+    else:
+         cartinfo=Usercart.objects.all()
+    context={'foodinfo':foodinformation,'cartinfo':cartinfo,'cartlength':cart_length}
+    return render(request,"home.html",context)
+    
+
+def editfoodbyresturant(request,pk):
+    editfoodinfo=Food.objects.get(id=pk)
+    context={'editfoodinfo':editfoodinfo}
+    if request.method=="POST":
+        action = request.POST.get("action")
+        if action == "delete":
+           
+            if editfoodinfo.resturant_name.id == request.user.id:
+                editfoodinfo.delete() 
+                messages.success(request, "Food item deleted successfully!")
+                return redirect("youhotel")
+            else:
+                messages.error(request, "You are not allowed to delete this item.")
+        else:
+            veg=request.POST.get("switch")
+            if veg=='on':
+                    veg=True
+            else:
+                    veg=False
+            print(veg)
+            foodid=request.POST.get("foodid")
+            form=foodsubmit(request.POST,request.FILES)
+            if form.is_valid():
+                foodname=form.cleaned_data["foodname"]
+                about=form.cleaned_data["about"]
+                price=form.cleaned_data["price"]
+                category=form.cleaned_data["category"]
+                stock=form.cleaned_data["stock"]
+                photo=form.cleaned_data["photo"]
+                validitycheck=Food.objects.get(id=foodid)
+                if validitycheck.resturant_name.id==request.user.id:
+                    editfoodinfo.foodname = foodname
+                    editfoodinfo.about = about
+                    editfoodinfo.price = price
+                    editfoodinfo.category = category
+                    editfoodinfo.stock_level = stock
+                    editfoodinfo.photo = photo
+                    editfoodinfo.isveg=veg
+                    editfoodinfo.save()
+                    return redirect("youhotel")
+                else:
+                    messages.error(request,"you are not alloweded to update this info")
+                    
+            else:
+               context['form']=form
+    else:
+        form =foodsubmit()  
+        context['form']=form
+    return render(request,"editfood.html",context)

@@ -275,6 +275,15 @@ class validateresetpassword(forms.Form):
 
 
 
+
+class foodsubmit(forms.Form):
+    foodname = forms.CharField(max_length=100, required=True, error_messages={"required": "Name is required"})
+    about = forms.CharField(max_length=500, required=True, error_messages={"required": "About is required"})
+    price = forms.IntegerField(required=True, error_messages={"required": "Price is required"})
+    category = forms.CharField(max_length=100, required=True, error_messages={"required": "Category is required"})
+    stock = forms.IntegerField(required=True, error_messages={"required": "Stock is required"})
+    photo = forms.ImageField(required=True, error_messages={"required": "Photo is required"})
+
     
 
 
