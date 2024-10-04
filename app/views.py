@@ -24,6 +24,10 @@ User=get_user_model()
 def home(request):
     cart_length=0
     foodinformation=Food.objects.all()
+    if request.GET.get("search"):
+         print("hi")
+         foodinformation= foodinformation.filter(
+        Q(foodname__icontains=request.GET.get("search")) | Q(about__icontains=request.GET.get("search")) | Q(resturant_name__username__icontains=request.GET.get("search")))
     if request.user.is_authenticated:
       cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
       cart_length=cartinfo.count()
@@ -377,6 +381,8 @@ def customehome(request,value):
     cart_length=0
    
     foodinformation=custom_search(value)
+   
+         
     if request.user.is_authenticated:
       cartinfo=Usercart.objects.filter(userid=request.user.id).values_list('foodid',flat=True) #list of tuples if not flat=true
       cart_length=cartinfo.count()
