@@ -77,7 +77,8 @@ FoodHub-OrderFood
                                 <input type="number"   value='' name="totalprice" id="price" readonly class="form-control">
                             </div>
                             <p id="errormessage" style="color:red;font-weight: bold"></p>
-                            <input class="btn btn-primary"id="oderfoodsubmit" type="Submit"  value="Order Now!" >
+                            <input hidden id="oderfoodsubmit" type="Submit"  value="Order Now!" >
+                            <input class="btn btn-primary" id="pay"   value="pay Now!" >
                             </form>
                      
                      </div>
@@ -124,6 +125,36 @@ FoodHub-OrderFood
             document.getElementById("errormessage").textContent = errorMessage;
             event.preventDefault(); 
         }
+    });
+  </script>
+  <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+  <script>
+    var config = {
+        // Your Khalti public key
+        publicKey: 'test_public_key_976d2879a09146299bdc1ce8480fb0de',
+        productIdentity: '12345',
+        productName: 'Test Product',
+        productUrl: 'http://example.com/test',
+        eventHandler: {
+            onSuccess (payload) {
+                console.log(payload);
+             
+                document.getElementById("oderfoodsubmit").click();
+               
+             
+            },
+            onError (error) {
+                console.log(error);
+            },
+            onClose () {
+                console.log('Widget is closed');
+            }
+        }
+    };
+    
+    var checkout = new   KhaltiCheckout(config);
+    document.getElementById("pay").addEventListener("click", function () {
+        checkout.show({ amount: document.getElementById("price").value*100 });
     });
   </script>
 {% endblock %}

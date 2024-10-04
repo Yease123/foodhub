@@ -24,7 +24,7 @@ FoodHub-Received Order
                             {% csrf_token %}
                             <input type="hidden" name="foodid" value="{{items.id}}">
                             <input type="hidden" name="useridofcart" value="1">
-                            <input type="submit" value="Discard Order" name="discard" class="btn btn-danger">
+                            {% comment %} <input type="submit" value="Discard Order" name="discard" class="btn btn-danger"> {% endcomment %}
                             <input type="submit" value="Accept Order" name="accept" class="btn btn-success">
                         </form>
                     </div>

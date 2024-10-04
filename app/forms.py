@@ -5,11 +5,12 @@ from django.contrib.auth import get_user_model
 import re
 User=get_user_model()
 class signupasuser(forms.Form):  
-    username=forms.CharField( max_length=50, required=True, error_messages={'required': 'Username is required'},widget=forms.EmailInput(attrs={'class':'input'}))
-    email=forms.EmailField( max_length=100, required=True, error_messages={'required': 'Email is required'},widget=forms.TextInput(attrs={'class':'input'}))
-    password=forms.CharField( required=True, error_messages={'required': 'Password is required'},widget=forms.PasswordInput(attrs={'class':'input'}))
-    address=forms.CharField( required=True, error_messages={'required': 'Address is required'},widget=forms.TextInput(attrs={'class':'input'}))
-    phone=forms.CharField( required=True, error_messages={'required': 'Phone is required'},widget=forms.NumberInput(attrs={'class':'input'}))
+    username=forms.CharField( max_length=50, required=True, error_messages={'required': 'Username is required'})
+    email=forms.EmailField( max_length=100, required=True, error_messages={'required': 'Email is required'})
+    password=forms.CharField( required=True, error_messages={'required': 'Password is required'})
+    cpassword=forms.CharField( required=True, error_messages={'required': ' confrim Password is required'})
+    address=forms.CharField( required=True, error_messages={'required': 'Address is required'})
+    phone=forms.CharField( required=True, error_messages={'required': 'Phone is required'})
     def clean_username(self):
         data = self.cleaned_data.get("username")
       
@@ -34,9 +35,12 @@ class signupasuser(forms.Form):
             raise forms.ValidationError("email is already taken")
         return data
     def clean_password(self):
+        cpassword=self.data.get("cpassword")
         data=self.cleaned_data.get("password")
         if len(data)<7 :
             raise forms.ValidationError("Password mustbe of altleast 7 digits")
+        if cpassword!=data:
+            raise forms.ValidationError("password and confrim password is not same")
         return data
     def clean_phone(self):
         data=self.cleaned_data.get("phone")
@@ -77,7 +81,7 @@ class sigupasresturant(forms.Form):
             raise forms.ValidationError("email is already taken")
         return data
     def clean_password(self):
-        cpassword=self.get("password")
+        cpassword=self.data.get("cpassword")
         data=self.cleaned_data.get("password")
         if len(data)<7:
             raise forms.ValidationError("password length must be greater than 7")
@@ -116,7 +120,7 @@ class signupasdelivery(forms.Form):
         return data
     def clean_password(self):
         data=self.cleaned_data.get("password")
-        cpassword=self.get("password")
+        cpassword=self.data.get("cpassword")
         if len(data)<7:
             raise forms.ValidationError("password length must be greater than 7")
         if cpassword!=data:

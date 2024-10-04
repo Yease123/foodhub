@@ -15,8 +15,8 @@ import os
 AUTH_USER_MODEL="app.customeuser"
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+TIME_ZONE = 'Asia/Kathmandu'
+USE_TZ = True 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
