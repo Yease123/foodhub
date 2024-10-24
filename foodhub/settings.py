@@ -31,7 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+   
+    'admin_tools_stats',
+     'django_nvd3',
+      'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -144,7 +147,7 @@ EMAIL_HOST_PASSWORD = 'ddux wsem tnik cmun'
 
 
 JAZZMIN_SETTINGS = {
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    
     "site_title": "Foodhub Admin",
     "site_header": "FoodHub",
     "site_brand": "FoodHub",
