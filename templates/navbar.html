@@ -78,7 +78,7 @@
                         </span>
                       </button></a>
                     <button id="mode" class="fa-solid fa-sun fa-lg me-2" style="border:none; background: none; " onclick={change()}></button>
-                    <form class="d-flex" role="search" method="get">
+                    <form class="d-flex" role="search" method="get" action="{% url 'home' %}" >
                         <input class="form-control me-2" name="search" type="search" placeholder="Food or Resturant" aria-label="Search">
                         <button class="btn btn-outline-success"  type="submit">Search</button>
                     </form>

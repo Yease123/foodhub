@@ -46,6 +46,8 @@ class signupasuser(forms.Form):
         data=self.cleaned_data.get("phone")
         if len(data)!=10:
             raise forms.ValidationError("Phone number must be of 10 digit")
+        if not data.startswith('98'):
+              raise forms.ValidationError("Phone must start with 98")
         return data
 class sigupasresturant(forms.Form):
     username=forms.CharField( max_length=20, required=True, error_messages={'required': 'Username is required'})
@@ -142,6 +144,8 @@ class signupasdelivery(forms.Form):
         data=self.cleaned_data.get("phone")
         if len(data)!=10:
             raise forms.ValidationError("phone must be of 10 digits")
+        if not data.startswith('98'):
+              raise forms.ValidationError("Phone must start with 98")
         return data
 class loginvalidate(forms.Form):
     username=forms.CharField(required=True,error_messages={"required":"Username or email is required"},widget=forms.TextInput(attrs={'class':'input'}))

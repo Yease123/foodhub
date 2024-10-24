@@ -14,7 +14,13 @@ FoodHub-Signup
                         <button type="button" id="hotel" class="btn btn-primary mb-3">Signup as Restaurant</button>
                         <button type="button" id="delivery" class="btn btn-primary mb-3">Signup as DeliveryMan</button>
                         <br>
-                       
+                        {% if messages %}
+
+                        {% for message in messages %}
+                        <div class="alert alert-danger" role="alert"> {{ message }} </div>
+                        {% endfor %}
+                    
+                    {% endif %}
                         {% for field in form %}
                         {% if field.errors %}
                            {% for error in field.errors %}

@@ -7,10 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
-import random
 from django.db.models import Q
 from .forms import signupasuser,sigupasresturant,signupasdelivery,loginvalidate,validateorder,validatedelivery,validatecustomer,validateemail,validateresetpassword,foodsubmit
-
+import random
 def generateotp():
     otp = ""
     for _ in range(6):
@@ -47,6 +46,7 @@ def login_user(request):
             user=authenticate(username=username,password=password)
             if user:
                 login(request,user)
+                messages.success(request,"login sucessfully")
                 return redirect("home")
             else:
                 messages.info(request,"invalid credentials")
@@ -76,7 +76,7 @@ def signup_user(request):
                     user=User.objects.create(username=username,email=email,address=address,phonenumber=phone,isuser=True)
                     user.set_password(password)
                     user.save()
-                    
+                    messages.success(request,"signup is successful")
                     return redirect('login')
 
                 else:
@@ -98,6 +98,7 @@ def signup_user(request):
                     user=User.objects.create(username=username,email=email,address=address,longitude=logititude,latitude=latitude,phonenumber=phone,photo=photo,isresturant=True)
                     user.set_password(password)
                     user.save()
+                    messages.success(request,"signup is successful")
 
 
                     return redirect("login")
@@ -116,7 +117,7 @@ def signup_user(request):
                     user=User.objects.create(username=username,email=email,address=address,phonenumber=phone,photo=photo,isdelivery=True)
                     user.set_password(password)
                     user.save()
-                    
+                    messages.success(request,"signup is successful")
                     return redirect("login")
                 else:
                     return render(request,"signup.html",{'form':form})
@@ -132,6 +133,7 @@ def signup_user(request):
     return render(request,"signup.html",context)
 def logoutuser(request):
     logout(request)
+    messages.success(request,"logout is successful")
     return redirect("home")
 @login_required
 def youhotel(request):
@@ -144,14 +146,15 @@ def youhotel(request):
             status = request.POST.get("submitstatus")
             user = request.user
             
-            # Update the user's open status
+           
             user.isopene = (status == 'open')
             user.save()
+           
             return redirect("youhotel")
         
         elif hidden_field == "insertingfood":
             form = foodsubmit(request.POST, request.FILES)
-            veg = request.POST.get("switch") == 'on'  # Get the checkbox value
+            veg = request.POST.get("switch") == 'on'  
             
             if form.is_valid():
                 name = form.cleaned_data["foodname"]
@@ -161,7 +164,7 @@ def youhotel(request):
                 stock = form.cleaned_data["stock"]
                 photo = form.cleaned_data["photo"]
                 
-                # Create the food item
+                
                 Food.objects.create(foodname=name,about=about,price=price,photo=photo,isveg=veg,stock_level=stock,category=category,resturant_name=request.user)
                 
                 messages.success(request, "Food item added successfully!")
@@ -186,7 +189,7 @@ def orderfood(request,pk):
     if request.method=="POST":
         form=validateorder(request.POST)
         if form.is_valid():
-            print("hi")
+            
            
             totalamount=form.cleaned_data["totalamount"]
             totalprice=form.cleaned_data["totalprice"]
@@ -197,7 +200,7 @@ def orderfood(request,pk):
            
             if orderedfoodbyuser.objects.filter(orderfoodid=pk).exists():
                 fooddatainfo=Food.objects.get(id=pk)
-                print(fooddatainfo)
+                
                 if fooddatainfo.stock_level>=totalamount:
                     fooddatainfo.stock_level=fooddatainfo.stock_level-totalamount
                     fooddatainfo.save()
@@ -219,7 +222,7 @@ def addCart(request):
     food = get_object_or_404(Food, id=foodid)
     cart=Usercart.objects.create(userid=userid,foodid=food)
     cart.save()
-   
+    messages.success(request,"food added to cart successfully")
     return redirect('home')
 def removeCart(request):
     userid=request.user
@@ -227,6 +230,7 @@ def removeCart(request):
     food = get_object_or_404(Food, id=foodid)
     cart=Usercart.objects.filter(userid=userid,foodid=food)
     cart.delete()
+    messages.success(request,"food  remove from cart")
    
     return redirect('home')
 def cart(request):

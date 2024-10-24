@@ -19,6 +19,7 @@ class adminfood(admin.ModelAdmin):
 class adminuser(admin.ModelAdmin):
     list_display=[ "username","email","latitude" ,"longitude" ,"approved","isopene","address","phonenumber","created_at","updated_at" ,"isresturant","isdelivery","isuser","photo"]
     list_filter = ["approved", "isresturant", "isdelivery"] 
+    
 @admin.register(orderedfoodbyuser)
 class adminorderfood(admin.ModelAdmin):
     list_display=["get_restaurant_phone","get_restaurant_name", "orderuserid",'id',"orderfoodid","ordered_at" ,"totalamount","totalprice","pickbydelivery","listedbyhotel","rejectbyhotel","addresstodeliver","otpfordeliveryman","otpforuser","deliverymanid","isdelivered",'get_delivery_name','get_delivery_number']

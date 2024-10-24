@@ -32,17 +32,17 @@ FoodHub-Resturant-EdidFoodInfo
                         <input type="hidden" name="foodid" value={{editfoodinfo.id}}>
                         <div class="mb-3">
                           <label  class="form-label">Food Name</label>
-                          <textarea name="foodname"  class="form-control">{{ editfoodinfo.foodname }}</textarea>
+                          <textarea name="foodname"  class="form-control" required>{{ editfoodinfo.foodname }}</textarea>
 
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Description</label>
-                            <textarea name="about" placeholder="Write about toppings if any and extra ingredients" class="form-control">{{ editfoodinfo.about }}</textarea>
+                            <textarea name="about" placeholder="Write about toppings if any and extra ingredients" class="form-control" required>{{ editfoodinfo.about }}</textarea>
 
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Price in Rs</label>
-                            <input type="number" value={{editfoodinfo.price}} name="price" class="form-control">
+                            <input type="number" value={{editfoodinfo.price}} name="price" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Tags</label>
@@ -51,7 +51,7 @@ FoodHub-Resturant-EdidFoodInfo
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">No of Stock</label>
-                            <input type="number" name="stock" value={{editfoodinfo.stock_level}} class="form-control">
+                            <input type="number" name="stock" value={{editfoodinfo.stock_level}} class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Image of Food</label>

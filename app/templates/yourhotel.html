@@ -57,27 +57,27 @@ FoodHub-YourResturant
                         <input type="hidden" name="hiddenfield" value="insertingfood">
                         <div class="mb-3">
                           <label  class="form-label">Food Name</label>
-                          <input type="text" name="foodname" class="form-control">
+                          <input type="text" name="foodname" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Description</label>
-                            <input type="text" name="about" placeholder="write about topings if any and extra ingredient" class="form-control">
+                            <input type="text" name="about" placeholder="write about topings if any and extra ingredient" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Price in Rs</label>
-                            <input type="number" name="price" class="form-control">
+                            <input type="number" min="0" name="price" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Tags</label>
-                            <input type="Text" name="category" placeholder="#burger,#fastfood" class="form-control">
+                            <input type="Text" name="category" placeholder="#burger,#fastfood" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">No of Stock</label>
-                            <input type="number" name="stock" class="form-control">
+                            <input type="number" min="0" name="stock" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label  class="form-label">Image of Food</label>
-                            <input type="file" name="photo" class="form-control">
+                            <input type="file" name="photo" class="form-control" required>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox"  name="switch" role="switch" id="flexSwitchCheckDefault">
